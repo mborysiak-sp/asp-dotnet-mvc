@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +20,13 @@ namespace MVCProject.Controllers
             _context = context;
         }
 
-        // GET: Developers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Developer.ToListAsync());
         }
 
-        // GET: Developers/Details/5
-        public async Task<IActionResult> Details(int? id)
+		[Authorize]
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -43,17 +43,14 @@ namespace MVCProject.Controllers
             return View(developer);
         }
 
-        // GET: Developers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Developers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
+		[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Phone,Address")] Developer developer)
         {
             if (ModelState.IsValid)
@@ -65,7 +62,6 @@ namespace MVCProject.Controllers
             return View(developer);
         }
 
-        // GET: Developers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,11 +77,9 @@ namespace MVCProject.Controllers
             return View(developer);
         }
 
-        // POST: Developers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
+		[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Phone,Address")] Developer developer)
         {
             if (id != developer.Id)
@@ -116,8 +110,8 @@ namespace MVCProject.Controllers
             return View(developer);
         }
 
-        // GET: Developers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -134,9 +128,9 @@ namespace MVCProject.Controllers
             return View(developer);
         }
 
-        // POST: Developers/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
+		[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var developer = await _context.Developer.FindAsync(id);
