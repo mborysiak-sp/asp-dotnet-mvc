@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVCProject.Validator;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,17 +12,15 @@ namespace MVCProject.Models
 		public int Id { get; set; }
 
 		[Required]
-		[Range(0.99, 100000)]
+		[MoneyValidator]
 		public double Price { get; set; }
 
 		[Required]
 		[StringLength(64, MinimumLength = 2)]
 		public string Name { get; set; }
 
-		[ForeignKey("Developer")]
-		[Key]
 		public int? DeveloperId { get; set; }
-		
+		[ForeignKey("Developer")]
 		public virtual Developer Developer { get; set; }
 	}
 }
